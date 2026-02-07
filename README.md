@@ -1,6 +1,7 @@
 # Monitoring Stack
 
-다른 인스턴스의 Spring Boot 서버를 홈서버 한 대에서 모니터링하는 IaC 구성. (Prometheus + Loki + Grafana)
+- Spring Boot 서버를 모니터링하는 IaC 구성. (Prometheus + Loki + Grafana)
+
 ---
 
 ## 빠른 시작
