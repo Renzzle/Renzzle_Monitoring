@@ -32,6 +32,7 @@ Grafana 기본 로그인: `admin` / `.env`의 `GRAFANA_ADMIN_PASSWORD`
 |------|:----:|--------|------|
 | `APP_SERVER_IP` | ✅ | — | 스크래핑할 Spring 서버 IP/호스트 |
 | `APP_SERVER_PORT` | | `8080` | Spring 앱 포트 |
+| `SCRAPE_TOKEN` | | — | Bearer 토큰. 대상 서버 Nginx에서 `/actuator/` 접근 시 이 값과 일치할 때만 허용 |
 | `GRAFANA_PORT` | | `3000` | Grafana 포트 |
 | `GRAFANA_ADMIN_PASSWORD` | | `admin` | Grafana 비밀번호 (배포 시 변경) |
 | `PROMETHEUS_PORT` | | `9090` | |
@@ -63,6 +64,22 @@ management:
   endpoint:
     prometheus:
       enabled: true
+```
+
+**Nginx에서 `/actuator/` 보호 (선택)**  
+`.env`의 `SCRAPE_TOKEN`과 동일한 값을 Nginx에서 검사하여 보안 강화
+
+```nginx
+location /actuator/ {
+    if ($http_authorization != "Bearer 여기에_SCRAPE_TOKEN_과_동일한_값") {
+        return 403;
+    }
+    proxy_pass http://127.0.0.1:8080;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
 ```
 
 ---

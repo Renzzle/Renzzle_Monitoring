@@ -26,6 +26,12 @@ PORT="${APP_SERVER_PORT:-8080}"
 [ -z "${APP_SERVER_IP}" ] && APP_SERVER_IP="APP_SERVER_IP"
 sed "s|APP_SERVER_IP|${APP_SERVER_IP}|g; s|APP_SERVER_PORT|${PORT}|g" prometheus/prometheus.yml.template > prometheus/prometheus.yml
 
+if [ -n "${SCRAPE_TOKEN}" ]; then
+  sed "s|SCRAPE_TOKEN|${SCRAPE_TOKEN}|g" prometheus/prometheus.yml > prometheus/prometheus.yml.tmp && mv prometheus/prometheus.yml.tmp prometheus/prometheus.yml
+else
+  sed '/bearer_token/d' prometheus/prometheus.yml > prometheus/prometheus.yml.tmp && mv prometheus/prometheus.yml.tmp prometheus/prometheus.yml
+fi
+
 echo "Starting stack (target: ${APP_SERVER_IP}:${PORT})..."
 docker compose up -d
 echo "Grafana http://localhost:${GRAFANA_PORT:-3000} | Prometheus ${PROMETHEUS_PORT:-9090} | Loki ${LOKI_PORT:-3100}"
