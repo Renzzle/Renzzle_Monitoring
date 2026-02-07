@@ -1,7 +1,6 @@
-# 모니터링 스택 (Prometheus + Loki + Grafana)
+# Monitoring Stack
 
-다른 인스턴스의 Spring Boot 서버를 홈서버 한 대에서 모니터링하는 IaC 구성.
-
+다른 인스턴스의 Spring Boot 서버를 홈서버 한 대에서 모니터링하는 IaC 구성. (Prometheus + Loki + Grafana)
 ---
 
 ## 빠른 시작
@@ -41,7 +40,7 @@ Grafana 기본 로그인: `admin` / `.env`의 `GRAFANA_ADMIN_PASSWORD`
 
 ---
 
-## Spring Boot 설정 (모니터링 대상)
+## Spring Boot 설정 (모니터링 대상 Server)
 
 메트릭 수집을 위해 Actuator + Micrometer Prometheus 추가.
 
@@ -73,11 +72,3 @@ Connections → Data sources → Add:
 
 - **Prometheus**: `http://prometheus:9090`
 - **Loki**: `http://loki:3100`
-
----
-
-## 참고
-
-- Docker 미설치 시 `install.sh`가 Docker 설치 후 안내 메시지 출력. `newgrp docker` 후 스크립트 재실행.
-- 데이터는 Docker 볼륨에 저장되어 컨테이너 재생성 후에도 유지됨.
-- Loki 로그 수집: Spring 서버에 Promtail 설치하거나 Logback Loki Appender 사용 → `http://홈서버IP:3100/loki/api/v1/push`
