@@ -1,0 +1,22 @@
+# Environment Variables
+.env
+.env.local
+*.pem
+*.key
+
+# Generated Configuration
+prometheus/prometheus.yml
+
+# Data Volumes (automatically created by docker compose)
+grafana_data/
+loki_data/
+prometheus_data/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

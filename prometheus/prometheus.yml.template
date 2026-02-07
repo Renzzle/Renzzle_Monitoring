@@ -1,0 +1,18 @@
+# Scrape target for Spring app. install.sh fills APP_SERVER_IP and APP_SERVER_PORT from .env.
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'spring-app'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['APP_SERVER_IP:APP_SERVER_PORT']
+        labels:
+          env: 'production'
+          app: 'spring-app'
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
