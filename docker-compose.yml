@@ -21,6 +21,7 @@ services:
     image: grafana/loki:latest
     container_name: loki
     restart: unless-stopped
+    user: "0:0"
     volumes:
       - ./loki/loki-config.yml:/etc/loki/local-config.yaml:ro
       - loki_data:/tmp/loki
@@ -39,7 +40,6 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_SERVER_ROOT_URL=${GRAFANA_ROOT_URL:-http://localhost:3000}
-      - GF_INSTALL_PLUGINS=grafana-loki-datasource
     volumes:
       - grafana_data:/var/lib/grafana
     ports:
