@@ -41,7 +41,7 @@ Grafana 기본 로그인: `admin` / `.env`의 `GRAFANA_ADMIN_PASSWORD`
 
 ---
 
-## Spring Boot 설정 (모니터링 대상 Server)
+## Spring Boot 설정 (모니터링 대상 서버)
 
 메트릭 수집을 위해 Actuator + Micrometer Prometheus 추가.
 
