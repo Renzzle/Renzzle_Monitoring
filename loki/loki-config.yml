@@ -31,6 +31,7 @@ limits_config:
   metric_aggregation_enabled: true
   enable_multi_variant_queries: true
   retention_period: 720h
+  max_query_length: 744h
 
 compactor:
   working_directory: /tmp/loki/compactor
