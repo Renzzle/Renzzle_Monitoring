@@ -6,13 +6,14 @@ services:
     container_name: prometheus
     restart: unless-stopped
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/prometheus-config.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=90d'
       - '--web.enable-lifecycle'
+      - '--web.enable-remote-write-receiver'
     ports:
       - "${PROMETHEUS_PORT:-9090}:9090"
     networks:
