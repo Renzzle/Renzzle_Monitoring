@@ -20,3 +20,11 @@ datasources:
     url: http://loki:3100
     jsonData:
       maxLines: 1000
+
+  # Long-term service figures from Loki's recording rules (see loki/rules)
+  - name: prometheus-kpi
+    type: prometheus
+    access: proxy
+    url: http://prometheus-kpi:9090
+    jsonData:
+      timeInterval: 1h

@@ -55,7 +55,18 @@
         "query": "prometheus",
         "hide": 2,
         "refresh": 1,
-        "regex": "",
+        "regex": "/^(?!.*kpi).*$/",
+        "current": {},
+        "options": []
+      },
+      {
+        "name": "kpi",
+        "label": "KPI",
+        "type": "datasource",
+        "query": "prometheus",
+        "hide": 2,
+        "refresh": 1,
+        "regex": "/kpi/",
         "current": {},
         "options": []
       },

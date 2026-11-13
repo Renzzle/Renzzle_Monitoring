@@ -1,4 +1,4 @@
-# Monitoring Stack: Prometheus + Loki + Grafana
+# Monitoring Stack: Prometheus + Loki + Grafana (+ a second Prometheus for long-term service figures)
 # Versions are pinned to the ones the dashboards were checked against; a plain `up` would keep an old cached `latest`
 
 services:
@@ -20,6 +20,24 @@ services:
     networks:
       - monitoring
 
+  # Service figures (DAU, sign-ups, purchases...) that Loki's recording rules push here, kept for good.
+  # Separate from the app metrics above because Prometheus has one retention for everything it stores
+  prometheus-kpi:
+    image: prom/prometheus:v3.16.0
+    container_name: prometheus-kpi
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus-kpi-config.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_kpi_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      # The longest Prometheus allows
+      - '--storage.tsdb.retention.time=100y'
+      - '--web.enable-remote-write-receiver'
+    networks:
+      - monitoring
+
   loki:
     image: grafana/loki:3.7.9
     container_name: loki
@@ -27,10 +45,13 @@ services:
     user: "0:0"
     volumes:
       - ./loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - ./loki/rules:/etc/loki/rules:ro
       - loki_data:/tmp/loki
     command: -config.file=/etc/loki/local-config.yaml
     ports:
       - "${LOKI_PORT:-3100}:3100"
+    depends_on:
+      - prometheus-kpi
     networks:
       - monitoring
 
@@ -56,12 +77,14 @@ services:
       - "${GRAFANA_PORT:-3000}:3000"
     depends_on:
       - prometheus
+      - prometheus-kpi
       - loki
     networks:
       - monitoring
 
 volumes:
   prometheus_data:
+  prometheus_kpi_data:
   loki_data:
   grafana_data:
 

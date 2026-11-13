@@ -1,0 +1,4 @@
+# Long-term store for the service figures Loki's recording rules push here (loki/rules). Nothing is scraped.
+
+global:
+  evaluation_interval: 1m

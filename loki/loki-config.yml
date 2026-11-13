@@ -60,6 +60,19 @@ pattern_ingester:
 
 ruler:
   alertmanager_url: http://localhost:9093
+  # Recording rules in loki/rules compute daily service figures and push them to prometheus-kpi
+  storage:
+    type: local
+    local:
+      directory: /etc/loki/rules
+  rule_path: /tmp/loki/rules-temp
+  wal:
+    dir: /tmp/loki/ruler-wal
+  remote_write:
+    enabled: true
+    clients:
+      kpi:
+        url: http://prometheus-kpi:9090/api/v1/write
 
 frontend:
   encoding: protobuf

@@ -1,0 +1,72 @@
+# Loki recording rules: daily, weekly and monthly service figures, pushed to prometheus-kpi and kept there for good.
+# The "fake" folder is the tenant Loki uses when auth is off. The queries match the dashboards'; change them together.
+#
+# Every series is labelled with the Korean day (d), week starting Monday (w) or month (m) it counts. The window is
+# longer than the period (36h for a day, 9d for a week, 34d for a month), so a finished period is recounted whole
+# for a while after it ends and a short outage loses nothing. Read a period as the largest value its series took.
+
+groups:
+  - name: kpi-daily
+    interval: 1h
+    rules:
+      - record: kpi:active_users:day
+        expr: |
+          count by (d) (sum by (d, user) (count_over_time(
+            {job="renzzle-backend"} |= "RequestLoggingFilter - " != "[user=]"
+            | pattern `<_> [user=<user>] <_>`
+            | label_format d=`{{ date "2006-01-02" (add (unixEpoch __timestamp__) 32400) }}` [36h])))
+      - record: kpi:signups:day
+        expr: |
+          sum by (d) (count_over_time(
+            {job="renzzle-backend"} |= "RequestLoggingFilter - " |= " - POST " |= "status=200 " |~ ` route=/api/auth/signup$`
+            | label_format d=`{{ date "2006-01-02" (add (unixEpoch __timestamp__) 32400) }}` [36h]))
+      - record: kpi:withdrawals:day
+        expr: |
+          sum by (d) (count_over_time(
+            {job="renzzle-backend"} |= "RequestLoggingFilter - " |= " - DELETE " |= "status=200 " |~ ` route=/api/user$`
+            | label_format d=`{{ date "2006-01-02" (add (unixEpoch __timestamp__) 32400) }}` [36h]))
+      - record: kpi:purchases:day
+        expr: |
+          sum by (d, product, platform) (count_over_time(
+            {job="renzzle-backend"} |= "In-app purchase granted."
+            | pattern `<_>platform=<platform>, productId=<product>, <_>`
+            | label_format d=`{{ date "2006-01-02" (add (unixEpoch __timestamp__) 32400) }}` [36h]))
+      - record: kpi:refunds:day
+        expr: |
+          sum by (d) (count_over_time(
+            {job="renzzle-backend"} |= "In-app purchase refunded."
+            | label_format d=`{{ date "2006-01-02" (add (unixEpoch __timestamp__) 32400) }}` [36h]))
+      - record: kpi:rank_games:day
+        expr: |
+          sum by (d) (count_over_time(
+            {job="renzzle-backend"} |= "Rank game ended."
+            | label_format d=`{{ date "2006-01-02" (add (unixEpoch __timestamp__) 32400) }}` [36h]))
+      - record: kpi:api_calls:day
+        expr: |
+          sum by (d, domain) (count_over_time(
+            {job="renzzle-backend"} |= "RequestLoggingFilter - "
+            | pattern `<_> route=<route>`
+            | route=~"/api/.+"
+            | label_format domain=`{{ regexReplaceAll "^/api/([^/]+).*" .route "${1}" }}`
+            | label_format d=`{{ date "2006-01-02" (add (unixEpoch __timestamp__) 32400) }}` [36h]))
+  - name: kpi-weekly-monthly
+    interval: 12h
+    rules:
+      - record: kpi:active_users:week
+        expr: |
+          count by (w) (sum by (w, user) (count_over_time(
+            {job="renzzle-backend"} |= "RequestLoggingFilter - " != "[user=]"
+            | pattern `<_> [user=<user>] <_>`
+            | label_format w=`{{ date "2006-01-02" (mul (sub (mul (div (add (div (add (unixEpoch __timestamp__) 32400) 86400) 3) 7) 7) 3) 86400) }}` [9d])))
+      - record: kpi:active_users:month
+        expr: |
+          count by (m) (sum by (m, user) (count_over_time(
+            {job="renzzle-backend"} |= "RequestLoggingFilter - " != "[user=]"
+            | pattern `<_> [user=<user>] <_>`
+            | label_format m=`{{ date "2006-01" (add (unixEpoch __timestamp__) 32400) }}` [34d])))
+      - record: kpi:paying_users:month
+        expr: |
+          count by (m) (sum by (m, user) (count_over_time(
+            {job="renzzle-backend"} |= "In-app purchase granted."
+            | pattern `<_> [user=<user>] <_>`
+            | label_format m=`{{ date "2006-01" (add (unixEpoch __timestamp__) 32400) }}` [34d])))

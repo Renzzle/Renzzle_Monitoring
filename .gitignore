@@ -8,6 +8,7 @@
 prometheus/prometheus.yml
 
 # Data Volumes (automatically created by docker compose)
+kpi-*.tgz
 grafana_data/
 loki_data/
 prometheus_data/
