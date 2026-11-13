@@ -30,8 +30,15 @@ query_range:
 limits_config:
   metric_aggregation_enabled: true
   enable_multi_variant_queries: true
-  retention_period: 720h
-  max_query_length: 744h
+  # 90 days, matching Prometheus. MAU and payment history only reach as far back as this
+  retention_period: 2160h
+  # A little over the retention so a "last 90 days" query is never refused
+  max_query_length: 2232h
+  # Counting distinct users per day or per feature groups by user id inside the query, which passes the default 500
+  max_query_series: 50000
+  # The dashboards ask for counts over whole days to months in one go; split those by day, not the default hour,
+  # so a 90-day panel is 90 pieces instead of 2,000
+  split_instant_metric_queries_by_interval: 24h
 
 compactor:
   working_directory: /tmp/loki/compactor

@@ -1,0 +1,3627 @@
+{
+  "uid": "renzzle-overview",
+  "title": "서비스 현황",
+  "description": "활성 사용자·가입·기능 사용·게임 지표 (로그 기반).",
+  "tags": [
+    "renzzle"
+  ],
+  "timezone": "Asia/Seoul",
+  "weekStart": "monday",
+  "editable": true,
+  "graphTooltip": 1,
+  "schemaVersion": 39,
+  "version": 1,
+  "fiscalYearStartMonth": 0,
+  "liveNow": false,
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "refresh": "",
+  "links": [
+    {
+      "title": "대시보드",
+      "type": "dashboards",
+      "tags": [
+        "renzzle"
+      ],
+      "asDropdown": false,
+      "includeVars": false,
+      "keepTime": true,
+      "targetBlank": false,
+      "icon": "external link"
+    }
+  ],
+  "annotations": {
+    "list": []
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "loki",
+        "label": "Loki",
+        "type": "datasource",
+        "query": "loki",
+        "hide": 2,
+        "refresh": 1,
+        "regex": "",
+        "current": {},
+        "options": []
+      },
+      {
+        "name": "prometheus",
+        "label": "Prometheus",
+        "type": "datasource",
+        "query": "prometheus",
+        "hide": 2,
+        "refresh": 1,
+        "regex": "",
+        "current": {},
+        "options": []
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "row",
+      "title": "사용자 지표",
+      "collapsed": false,
+      "panels": [],
+      "id": 2,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "stat",
+      "title": "오늘 DAU",
+      "description": "오늘 0시 이후 활성 유저 수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "count(sum by (user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [user=<user>] <_>` [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "timeFrom": "now/d",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 0,
+        "y": 1
+      },
+      "id": 3,
+      "hideTimeOverride": true
+    },
+    {
+      "type": "stat",
+      "title": "어제 DAU",
+      "description": "어제 활성 유저 수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "count(sum by (user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [user=<user>] <_>` [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "timeFrom": "now/d",
+      "timeShift": "1d/d",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 3,
+        "y": 1
+      },
+      "id": 4,
+      "hideTimeOverride": true
+    },
+    {
+      "type": "stat",
+      "title": "WAU (7일)",
+      "description": "최근 7일 활성 유저 수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "count(sum by (user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [user=<user>] <_>` [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "timeFrom": "7d",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 6,
+        "y": 1
+      },
+      "id": 5,
+      "hideTimeOverride": true
+    },
+    {
+      "type": "stat",
+      "title": "MAU (30일)",
+      "description": "최근 30일 활성 유저 수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "count(sum by (user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [user=<user>] <_>` [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "timeFrom": "30d",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 9,
+        "y": 1
+      },
+      "id": 6,
+      "hideTimeOverride": true
+    },
+    {
+      "type": "stat",
+      "title": "고착도",
+      "description": "DAU ÷ MAU. 20% 이상이면 양호.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "count(sum by (user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [user=<user>] <_>` [1d]))) / count(sum by (user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [user=<user>] <_>` [30d])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "percentunit",
+          "decimals": 1,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 12,
+        "y": 1
+      },
+      "id": 7
+    },
+    {
+      "type": "stat",
+      "title": "신규 가입 (선택 기간)",
+      "description": "회원가입 건수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \" - POST \" |= \"status=200 \" |~ ` route=/api/auth/signup$` [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 15,
+        "y": 1
+      },
+      "id": 8
+    },
+    {
+      "type": "stat",
+      "title": "탈퇴 (선택 기간)",
+      "description": "회원 탈퇴 건수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \" - DELETE \" |= \"status=200 \" |~ ` route=/api/user$` [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 9
+    },
+    {
+      "type": "barchart",
+      "title": "일별 DAU (최근 30일)",
+      "description": "일별 활성 유저 수. 당일은 집계 중.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "count by (d, day) (sum by (d, day, user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [user=<user>] <_>` | label_format d=`{{ date \"2006-01-02\" (add (unixEpoch __timestamp__) 32400) }}`, day=`{{ date \"01/02 Mon\" (add (unixEpoch __timestamp__) 32400) }}` [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1,
+            "gradientMode": "none",
+            "axisSoftMin": 0,
+            "axisPlacement": "auto",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          }
+        },
+        "overrides": []
+      },
+      "timeFrom": "now-29d/d",
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "d",
+                "desc": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "d": true
+            },
+            "renameByName": {
+              "Value #A": "DAU"
+            },
+            "indexByName": {}
+          }
+        }
+      ],
+      "options": {
+        "orientation": "vertical",
+        "xTickLabelRotation": -45,
+        "xTickLabelSpacing": 0,
+        "showValue": "never",
+        "stacking": "none",
+        "groupWidth": 0.7,
+        "barWidth": 0.85,
+        "barRadius": 0,
+        "fullHighlight": false,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      },
+      "id": 10,
+      "hideTimeOverride": true
+    },
+    {
+      "type": "barchart",
+      "title": "주별 WAU (최근 12주)",
+      "description": "주별(월요일 시작) 활성 유저 수. 이번 주는 집계 중.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "count by (w, wk) (sum by (w, wk, user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [user=<user>] <_>` | label_format w=`{{ date \"2006-01-02\" (mul (sub (mul (div (add (div (add (unixEpoch __timestamp__) 32400) 86400) 3) 7) 7) 3) 86400) }}`, wk=`{{ date \"01/02~\" (mul (sub (mul (div (add (div (add (unixEpoch __timestamp__) 32400) 86400) 3) 7) 7) 3) 86400) }}` [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1,
+            "gradientMode": "none",
+            "axisSoftMin": 0,
+            "axisPlacement": "auto",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          }
+        },
+        "overrides": []
+      },
+      "timeFrom": "now-11w/w",
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "w",
+                "desc": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "w": true
+            },
+            "renameByName": {
+              "Value #A": "WAU"
+            },
+            "indexByName": {}
+          }
+        }
+      ],
+      "options": {
+        "orientation": "vertical",
+        "xTickLabelRotation": -45,
+        "xTickLabelSpacing": 0,
+        "showValue": "never",
+        "stacking": "none",
+        "groupWidth": 0.7,
+        "barWidth": 0.85,
+        "barRadius": 0,
+        "fullHighlight": false,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 5
+      },
+      "id": 11,
+      "hideTimeOverride": true
+    },
+    {
+      "type": "barchart",
+      "title": "월별 MAU (최근 3개월)",
+      "description": "월별 활성 유저 수. 보관 기간(90일) 밖은 미포함.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "count by (m) (sum by (m, user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [user=<user>] <_>` | label_format m=`{{ date \"2006-01\" (add (unixEpoch __timestamp__) 32400) }}` [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1,
+            "gradientMode": "none",
+            "axisSoftMin": 0,
+            "axisPlacement": "auto",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          }
+        },
+        "overrides": []
+      },
+      "timeFrom": "now-2M/M",
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "m",
+                "desc": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "Value #A": "MAU"
+            },
+            "indexByName": {}
+          }
+        }
+      ],
+      "options": {
+        "orientation": "vertical",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0,
+        "showValue": "always",
+        "stacking": "none",
+        "groupWidth": 0.7,
+        "barWidth": 0.85,
+        "barRadius": 0,
+        "fullHighlight": false,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 5
+      },
+      "id": 12,
+      "hideTimeOverride": true
+    },
+    {
+      "type": "barchart",
+      "title": "일별 신규 가입 (최근 30일)",
+      "description": "일별 회원가입 건수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (d, day) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \" - POST \" |= \"status=200 \" |~ ` route=/api/auth/signup$` | label_format d=`{{ date \"2006-01-02\" (add (unixEpoch __timestamp__) 32400) }}`, day=`{{ date \"01/02 Mon\" (add (unixEpoch __timestamp__) 32400) }}` [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1,
+            "gradientMode": "none",
+            "axisSoftMin": 0,
+            "axisPlacement": "auto",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          }
+        },
+        "overrides": []
+      },
+      "timeFrom": "now-29d/d",
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "d",
+                "desc": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "d": true
+            },
+            "renameByName": {
+              "Value #A": "가입"
+            },
+            "indexByName": {}
+          }
+        }
+      ],
+      "options": {
+        "orientation": "vertical",
+        "xTickLabelRotation": -45,
+        "xTickLabelSpacing": 0,
+        "showValue": "never",
+        "stacking": "none",
+        "groupWidth": 0.7,
+        "barWidth": 0.85,
+        "barRadius": 0,
+        "fullHighlight": false,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
+      "id": 13,
+      "hideTimeOverride": true
+    },
+    {
+      "type": "barchart",
+      "title": "시간대별 요청 수 (선택 기간, 한국시간)",
+      "description": "시간대별 요청 분포 (한국시간).",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (hour) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" | label_format hour=`{{ date \"15\" (add (unixEpoch __timestamp__) 32400) }}시` [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "purple"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1,
+            "gradientMode": "none",
+            "axisSoftMin": 0,
+            "axisPlacement": "auto",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          }
+        },
+        "overrides": []
+      },
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "hour",
+                "desc": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "Value #A": "요청 수"
+            },
+            "indexByName": {}
+          }
+        }
+      ],
+      "options": {
+        "orientation": "vertical",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0,
+        "showValue": "never",
+        "stacking": "none",
+        "groupWidth": 0.7,
+        "barWidth": 0.85,
+        "barRadius": 0,
+        "fullHighlight": false,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 13
+      },
+      "id": 14
+    },
+    {
+      "type": "row",
+      "title": "기능 사용 (선택 기간)",
+      "collapsed": false,
+      "panels": [],
+      "id": 15,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      }
+    },
+    {
+      "type": "table",
+      "title": "기능별 사용량",
+      "description": "API별 호출 수·사용자 수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (feature) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" | pattern `<_> [<_>] [<_>] [user=<_>] <_> - <method> <_> status=<_> <_>ms<_>` | pattern `<_> route=<route>` | route=~\"/api/.+\" | label_format feature=`{{.method}} {{.route}}` [$__range]))",
+          "queryType": "instant",
+          "legendFormat": "호출 수",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "count by (feature) (sum by (feature, user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [<_>] [<_>] [user=<user>] <_> - <method> <_> status=<_> <_>ms<_>` | pattern `<_> route=<route>` | route=~\"/api/.+\" | label_format feature=`{{.method}} {{.route}}` [$__range])))",
+          "queryType": "instant",
+          "legendFormat": "사용자 수",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "POST /api/auth/email": {
+                  "text": "[인증] 가입 인증메일 발송",
+                  "index": 0
+                },
+                "POST /api/auth/confirmCode": {
+                  "text": "[인증] 인증코드 확인",
+                  "index": 1
+                },
+                "GET /api/auth/duplicate/{nickname}": {
+                  "text": "[인증] 닉네임 중복 확인",
+                  "index": 2
+                },
+                "POST /api/auth/signup": {
+                  "text": "[인증] 회원가입",
+                  "index": 3
+                },
+                "POST /api/auth/login": {
+                  "text": "[인증] 로그인",
+                  "index": 4
+                },
+                "POST /api/auth/password/verify": {
+                  "text": "[인증] 비밀번호 확인",
+                  "index": 5
+                },
+                "PATCH /api/auth/password": {
+                  "text": "[인증] 비밀번호 변경",
+                  "index": 6
+                },
+                "POST /api/auth/password/reset/email": {
+                  "text": "[인증] 비밀번호 재설정 메일",
+                  "index": 7
+                },
+                "PATCH /api/auth/password/reset": {
+                  "text": "[인증] 비밀번호 재설정",
+                  "index": 8
+                },
+                "POST /api/auth/logout": {
+                  "text": "[인증] 로그아웃",
+                  "index": 9
+                },
+                "POST /api/auth/reissueToken": {
+                  "text": "[인증] 토큰 재발급",
+                  "index": 10
+                },
+                "GET /api/auth/admin/verify": {
+                  "text": "[인증] 어드민 여부 확인",
+                  "index": 11
+                },
+                "POST /api/auth/test-token": {
+                  "text": "[인증] 테스트 토큰 발급",
+                  "index": 12
+                },
+                "GET /api/app-info": {
+                  "text": "[앱] 앱 정보 조회",
+                  "index": 13
+                },
+                "POST /api/app-info": {
+                  "text": "[앱] 앱 정보 수정 (어드민)",
+                  "index": 14
+                },
+                "POST /api/notice/personal": {
+                  "text": "[공지] 개인 알림 조회",
+                  "index": 15
+                },
+                "POST /api/notice/public": {
+                  "text": "[공지] 공지사항 조회",
+                  "index": 16
+                },
+                "POST /api/payments/in-app/verify": {
+                  "text": "[결제] 인앱결제 검증",
+                  "index": 17
+                },
+                "GET /api/puzzle/cache/community-puzzles": {
+                  "text": "[AI 응수] 캐시할 퍼즐 찾기 (어드민)",
+                  "index": 18
+                },
+                "POST /api/puzzle/cache/save": {
+                  "text": "[AI 응수] 응수 저장",
+                  "index": 19
+                },
+                "POST /api/puzzle/cache/save-batch": {
+                  "text": "[AI 응수] 응수 여러 개 저장",
+                  "index": 20
+                },
+                "GET /api/puzzle/cache/ai-response": {
+                  "text": "[AI 응수] AI 응수 조회",
+                  "index": 21
+                },
+                "DELETE /api/puzzle/cache/ai-response": {
+                  "text": "[AI 응수] AI 응수 삭제 (어드민)",
+                  "index": 22
+                },
+                "GET /api/puzzle/cache/next-moves": {
+                  "text": "[AI 응수] 다음 수 후보 조회",
+                  "index": 23
+                },
+                "GET /api/puzzle/cache/tree": {
+                  "text": "[AI 응수] 응수 트리 조회",
+                  "index": 24
+                },
+                "POST /api/community/puzzle": {
+                  "text": "[커뮤니티] 퍼즐 등록",
+                  "index": 25
+                },
+                "GET /api/community/puzzle": {
+                  "text": "[커뮤니티] 퍼즐 목록",
+                  "index": 26
+                },
+                "GET /api/community/puzzle/{puzzleId}": {
+                  "text": "[커뮤니티] 퍼즐 열기",
+                  "index": 27
+                },
+                "POST /api/community/puzzle/{puzzleId}/share": {
+                  "text": "[커뮤니티] 공유 링크 만들기",
+                  "index": 28
+                },
+                "GET /api/community/puzzle/share/{token}": {
+                  "text": "[커뮤니티] 공유 링크로 앱에서 열기",
+                  "index": 29
+                },
+                "POST /api/community/puzzle/{puzzleId}/answer": {
+                  "text": "[커뮤니티] 정답 보기 (재화)",
+                  "index": 30
+                },
+                "POST /api/community/puzzle/{puzzleId}/solve": {
+                  "text": "[커뮤니티] 퍼즐 풀이 성공",
+                  "index": 31
+                },
+                "POST /api/community/puzzle/{puzzleId}/like": {
+                  "text": "[커뮤니티] 좋아요",
+                  "index": 32
+                },
+                "POST /api/community/puzzle/{puzzleId}/dislike": {
+                  "text": "[커뮤니티] 싫어요",
+                  "index": 33
+                },
+                "GET /api/content/recommend": {
+                  "text": "[추천] 추천 팩",
+                  "index": 34
+                },
+                "GET /api/content/trend": {
+                  "text": "[추천] 트렌드 퍼즐",
+                  "index": 35
+                },
+                "POST /api/rank/game/start": {
+                  "text": "[랭크] 게임 시작",
+                  "index": 36
+                },
+                "POST /api/rank/game/result": {
+                  "text": "[랭크] 퍼즐 결과 제출",
+                  "index": 37
+                },
+                "POST /api/rank/game/end": {
+                  "text": "[랭크] 게임 종료",
+                  "index": 38
+                },
+                "GET /api/rank/game/archive": {
+                  "text": "[랭크] 지난 게임 기록",
+                  "index": 39
+                },
+                "GET /api/rank/rating": {
+                  "text": "[랭크] 레이팅 랭킹",
+                  "index": 40
+                },
+                "GET /api/rank/rating/my": {
+                  "text": "[랭크] 내 레이팅",
+                  "index": 41
+                },
+                "GET /api/rank/community": {
+                  "text": "[랭크] 출제자 랭킹",
+                  "index": 42
+                },
+                "POST /api/training/puzzle": {
+                  "text": "[트레이닝] 퍼즐 추가 (어드민)",
+                  "index": 43
+                },
+                "PATCH /api/training/puzzle/{puzzleId}": {
+                  "text": "[트레이닝] 퍼즐 수정 (어드민)",
+                  "index": 44
+                },
+                "DELETE /api/training/puzzle/{puzzleId}": {
+                  "text": "[트레이닝] 퍼즐 삭제 (어드민)",
+                  "index": 45
+                },
+                "POST /api/training/puzzle/{puzzleId}/solve": {
+                  "text": "[트레이닝] 퍼즐 풀이 성공",
+                  "index": 46
+                },
+                "GET /api/training/puzzle/{pack}": {
+                  "text": "[트레이닝] 팩의 퍼즐 목록",
+                  "index": 47
+                },
+                "POST /api/training/pack": {
+                  "text": "[트레이닝] 팩 만들기 (어드민)",
+                  "index": 48
+                },
+                "POST /api/training/pack/translation": {
+                  "text": "[트레이닝] 팩 번역 추가 (어드민)",
+                  "index": 49
+                },
+                "PATCH /api/training/pack/{packId}": {
+                  "text": "[트레이닝] 팩 수정 (어드민)",
+                  "index": 50
+                },
+                "DELETE /api/training/pack/{packId}": {
+                  "text": "[트레이닝] 팩 삭제 (어드민)",
+                  "index": 51
+                },
+                "GET /api/training/pack": {
+                  "text": "[트레이닝] 팩 목록",
+                  "index": 52
+                },
+                "POST /api/training/pack/purchase": {
+                  "text": "[트레이닝] 팩 구매 (재화)",
+                  "index": 53
+                },
+                "POST /api/training/puzzle/{puzzleId}/answer": {
+                  "text": "[트레이닝] 정답 구매 (재화)",
+                  "index": 54
+                },
+                "GET /api/user": {
+                  "text": "[내 정보] 내 정보 조회",
+                  "index": 55
+                },
+                "DELETE /api/user": {
+                  "text": "[내 정보] 회원 탈퇴",
+                  "index": 56
+                },
+                "PATCH /api/user/nickname": {
+                  "text": "[내 정보] 닉네임 변경 (재화)",
+                  "index": 57
+                },
+                "PATCH /api/user/refund-data-consent": {
+                  "text": "[내 정보] 환불 데이터 동의 변경",
+                  "index": 58
+                },
+                "GET /api/user/like": {
+                  "text": "[내 정보] 좋아요한 퍼즐",
+                  "index": 59
+                },
+                "GET /api/user/puzzle": {
+                  "text": "[내 정보] 내가 올린 퍼즐",
+                  "index": 60
+                },
+                "DELETE /api/user/{puzzleId}": {
+                  "text": "[내 정보] 내 퍼즐 삭제",
+                  "index": 61
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "minWidth": 60
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "호출 수"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "gauge",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-BlPu"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "기능"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 300
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "Value #A",
+                "desc": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "feature": "기능",
+              "Value #A": "호출 수",
+              "Value #B": "사용자 수"
+            },
+            "indexByName": {}
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ]
+        }
+      },
+      "gridPos": {
+        "h": 18,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "id": 16
+    },
+    {
+      "type": "piechart",
+      "title": "영역별 요청 비중",
+      "description": "영역별 호출 비율.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (domain) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" | pattern `<_> route=<route>` | route=~\"/api/.+\" | label_format domain=`{{ regexReplaceAll \"^/api/([^/]+).*\" .route \"${1}\" }}` [$__range]))",
+          "queryType": "instant",
+          "legendFormat": "{{domain}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "training"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "트레이닝"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "blue"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "community"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "커뮤니티"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "green"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "rank"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "랭크"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "puzzle"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "AI 응수"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "purple"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "content"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "추천"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "yellow"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "user"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "내 정보"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "light-blue"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "notice"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "공지"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#8f8f8f"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "auth"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "인증"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#b0b0b0"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "app-info"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "앱 정보"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#6e6e6e"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "payments"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "결제"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "red"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            }
+          }
+        },
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "domain",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "Value #A",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "pieType": "donut",
+        "displayLabels": [
+          "percent"
+        ],
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 21
+      },
+      "id": 17
+    },
+    {
+      "type": "table",
+      "title": "영역별 사용 현황",
+      "description": "영역별 호출 수·사용자 수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (domain) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" | pattern `<_> route=<route>` | route=~\"/api/.+\" | label_format domain=`{{ regexReplaceAll \"^/api/([^/]+).*\" .route \"${1}\" }}` [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "count by (domain) (sum by (domain, user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [user=<user>] <_>` | pattern `<_> route=<route>` | route=~\"/api/.+\" | label_format domain=`{{ regexReplaceAll \"^/api/([^/]+).*\" .route \"${1}\" }}` [$__range])))",
+          "queryType": "instant",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "training": {
+                  "text": "트레이닝",
+                  "index": 0
+                },
+                "community": {
+                  "text": "커뮤니티",
+                  "index": 1
+                },
+                "rank": {
+                  "text": "랭크",
+                  "index": 2
+                },
+                "puzzle": {
+                  "text": "AI 응수",
+                  "index": 3
+                },
+                "content": {
+                  "text": "추천",
+                  "index": 4
+                },
+                "user": {
+                  "text": "내 정보",
+                  "index": 5
+                },
+                "notice": {
+                  "text": "공지",
+                  "index": 6
+                },
+                "auth": {
+                  "text": "인증",
+                  "index": 7
+                },
+                "app-info": {
+                  "text": "앱 정보",
+                  "index": 8
+                },
+                "payments": {
+                  "text": "결제",
+                  "index": 9
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "minWidth": 60
+          }
+        },
+        "overrides": []
+      },
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "Value #A",
+                "desc": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "domain": "영역",
+              "Value #A": "호출 수",
+              "Value #B": "사용자 수"
+            },
+            "indexByName": {}
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ]
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "id": 18
+    },
+    {
+      "type": "timeseries",
+      "title": "영역별 요청 추이",
+      "description": "영역별 호출 수 추이.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (domain) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" | pattern `<_> route=<route>` | route=~\"/api/.+\" | label_format domain=`{{ regexReplaceAll \"^/api/([^/]+).*\" .route \"${1}\" }}` [$__auto]))",
+          "queryType": "range",
+          "legendFormat": "{{domain}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "bars",
+            "lineWidth": 1,
+            "fillOpacity": 70,
+            "showPoints": "never",
+            "spanNulls": false,
+            "barAlignment": 0,
+            "axisSoftMin": 0,
+            "gradientMode": "none",
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "training"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "트레이닝"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "blue"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "community"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "커뮤니티"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "green"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "rank"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "랭크"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "puzzle"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "AI 응수"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "purple"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "content"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "추천"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "yellow"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "user"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "내 정보"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "light-blue"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "notice"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "공지"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#8f8f8f"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "auth"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "인증"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#b0b0b0"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "app-info"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "앱 정보"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#6e6e6e"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "payments"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "결제"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "red"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "interval": "1h",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "id": 19
+    },
+    {
+      "type": "row",
+      "title": "게임 지표 (선택 기간)",
+      "collapsed": false,
+      "panels": [],
+      "id": 20,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 47
+      }
+    },
+    {
+      "type": "stat",
+      "title": "랭크 게임 수",
+      "description": "완료된 랭크 게임 수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({job=\"renzzle-backend\"} |= \"Rank game ended.\" [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 48
+      },
+      "id": 21
+    },
+    {
+      "type": "stat",
+      "title": "랭크 참여 유저",
+      "description": "랭크 게임 완료 유저 수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "count(sum by (user) (count_over_time({job=\"renzzle-backend\"} |= \"Rank game ended.\" | pattern `<_> [user=<user>] <_>` [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 48
+      },
+      "id": 22
+    },
+    {
+      "type": "stat",
+      "title": "판당 평균 정답 수",
+      "description": "게임당 평균 정답 문제 수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum(sum_over_time({job=\"renzzle-backend\"} |= \"Rank game ended.\" | pattern `<_>Rank game ended. puzzles=<_>, solved=<solved>, <_>` | unwrap solved [$__range])) / sum(count_over_time({job=\"renzzle-backend\"} |= \"Rank game ended.\" [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 1,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 48
+      },
+      "id": 23
+    },
+    {
+      "type": "stat",
+      "title": "랭크 정답률",
+      "description": "출제 대비 정답 비율 (클라이언트 보고 기준).",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (ptype) (count_over_time({job=\"renzzle-backend\"} |= \"Rank result. puzzleType=\" |= \"solved=true\" | pattern `<_>puzzleType=<ptype>, <_>` [$__range])) / sum by (ptype) (count_over_time({job=\"renzzle-backend\"} |= \"Rank result. puzzleType=\" | pattern `<_>puzzleType=<ptype>, <_>` [$__range]))",
+          "queryType": "instant",
+          "legendFormat": "{{ptype}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "percentunit",
+          "decimals": 1,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TRAINING"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "트레이닝"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "COMMUNITY"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "커뮤니티"
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            }
+          }
+        },
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "ptype",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "Value #A",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "value_and_name",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 48
+      },
+      "id": 24
+    },
+    {
+      "type": "stat",
+      "title": "풀이 시간 (중앙값)",
+      "description": "정답 문제 풀이 시간 중앙값.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "quantile_over_time(0.5, {job=\"renzzle-backend\"} |= \"Rank result. puzzleType=\" |= \"solved=true\" | pattern `<_>puzzleType=<ptype>, <_>elapsedMs=<elapsed>` | unwrap elapsed [$__range]) by (ptype)",
+          "queryType": "instant",
+          "legendFormat": "{{ptype}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TRAINING"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "트레이닝"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "COMMUNITY"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "커뮤니티"
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            }
+          }
+        },
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "ptype",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "Value #A",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "value_and_name",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 48
+      },
+      "id": 25
+    },
+    {
+      "type": "stat",
+      "title": "중복 등록 거절",
+      "description": "기존 퍼즐과 중복되어 거절된 등록 건수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({job=\"renzzle-backend\"} |= \"Rejected duplicate community puzzle\" [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 48
+      },
+      "id": 26
+    },
+    {
+      "type": "bargauge",
+      "title": "주요 이벤트 (성공 건수)",
+      "description": "주요 이벤트 성공 건수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (feature) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" | pattern `<_> [<_>] [<_>] [user=<_>] <_> - <method> <_> status=<status> <_>ms<_>` | pattern `<_> route=<route>` | status=\"200\" | label_format feature=`{{.method}} {{.route}}` | feature=~`^(POST /api/rank/game/start|POST /api/training/puzzle/\\{puzzleId\\}/solve|POST /api/community/puzzle/\\{puzzleId\\}/solve|POST /api/community/puzzle|POST /api/community/puzzle/\\{puzzleId\\}/like|POST /api/community/puzzle/\\{puzzleId\\}/share|GET /api/community/puzzle/share/\\{token\\}|POST /api/training/pack/purchase|POST /api/training/puzzle/\\{puzzleId\\}/answer|POST /api/community/puzzle/\\{puzzleId\\}/answer|POST /api/payments/in-app/verify)$` [$__range]))",
+          "queryType": "instant",
+          "legendFormat": "{{feature}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "color": {
+            "mode": "continuous-BlPu"
+          },
+          "min": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/rank/game/start"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[랭크] 게임 시작"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/training/puzzle/{puzzleId}/solve"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[트레이닝] 퍼즐 풀이 성공"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/community/puzzle/{puzzleId}/solve"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[커뮤니티] 퍼즐 풀이 성공"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/community/puzzle"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[커뮤니티] 퍼즐 등록"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/community/puzzle/{puzzleId}/like"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[커뮤니티] 좋아요"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/community/puzzle/{puzzleId}/share"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[커뮤니티] 공유 링크 만들기"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "GET /api/community/puzzle/share/{token}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[커뮤니티] 공유 링크로 앱에서 열기"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/training/pack/purchase"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[트레이닝] 팩 구매 (재화)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/training/puzzle/{puzzleId}/answer"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[트레이닝] 정답 구매 (재화)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/community/puzzle/{puzzleId}/answer"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[커뮤니티] 정답 보기 (재화)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/payments/in-app/verify"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[결제] 인앱결제 검증"
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            }
+          }
+        },
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "feature",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "Value #A",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "basic",
+        "showUnfilled": true,
+        "valueMode": "color",
+        "namePlacement": "top",
+        "sizing": "manual",
+        "minVizHeight": 32,
+        "maxVizHeight": 40,
+        "minVizWidth": 8,
+        "text": {
+          "titleSize": 13,
+          "valueSize": 16
+        },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 0,
+        "y": 52
+      },
+      "id": 27
+    },
+    {
+      "type": "timeseries",
+      "title": "주요 이벤트 추이",
+      "description": "주요 이벤트 성공 건수 추이.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (feature) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" | pattern `<_> [<_>] [<_>] [user=<_>] <_> - <method> <_> status=<status> <_>ms<_>` | pattern `<_> route=<route>` | status=\"200\" | label_format feature=`{{.method}} {{.route}}` | feature=~`^(POST /api/rank/game/start|POST /api/training/puzzle/\\{puzzleId\\}/solve|POST /api/community/puzzle/\\{puzzleId\\}/solve|POST /api/community/puzzle|POST /api/community/puzzle/\\{puzzleId\\}/like|POST /api/community/puzzle/\\{puzzleId\\}/share|GET /api/community/puzzle/share/\\{token\\}|POST /api/training/pack/purchase|POST /api/training/puzzle/\\{puzzleId\\}/answer|POST /api/community/puzzle/\\{puzzleId\\}/answer|POST /api/payments/in-app/verify)$` [$__auto]))",
+          "queryType": "range",
+          "legendFormat": "{{feature}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false,
+            "barAlignment": 0,
+            "axisSoftMin": 0,
+            "gradientMode": "none",
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/rank/game/start"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[랭크] 게임 시작"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/training/puzzle/{puzzleId}/solve"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[트레이닝] 퍼즐 풀이 성공"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/community/puzzle/{puzzleId}/solve"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[커뮤니티] 퍼즐 풀이 성공"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/community/puzzle"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[커뮤니티] 퍼즐 등록"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/community/puzzle/{puzzleId}/like"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[커뮤니티] 좋아요"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/community/puzzle/{puzzleId}/share"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[커뮤니티] 공유 링크 만들기"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "GET /api/community/puzzle/share/{token}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[커뮤니티] 공유 링크로 앱에서 열기"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/training/pack/purchase"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[트레이닝] 팩 구매 (재화)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/training/puzzle/{puzzleId}/answer"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[트레이닝] 정답 구매 (재화)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/community/puzzle/{puzzleId}/answer"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[커뮤니티] 정답 보기 (재화)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POST /api/payments/in-app/verify"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "[결제] 인앱결제 검증"
+              }
+            ]
+          }
+        ]
+      },
+      "interval": "1h",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 12,
+        "y": 52
+      },
+      "id": 28
+    },
+    {
+      "type": "stat",
+      "title": "커뮤니티 퍼즐 등록",
+      "description": "커뮤니티 퍼즐 등록 건수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \" - POST \" |= \"status=200 \" |~ ` route=/api/community/puzzle$` [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 66
+      },
+      "id": 29
+    },
+    {
+      "type": "stat",
+      "title": "공유 링크 생성",
+      "description": "공유 링크 생성 건수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \" - POST \" |= \"status=200 \" |~ ` route=/api/community/puzzle/\\{puzzleId\\}/share$` [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 66
+      },
+      "id": 30
+    },
+    {
+      "type": "stat",
+      "title": "공유 페이지 조회 (웹)",
+      "description": "웹 공유 페이지 조회 건수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \" - GET \" |= \"status=200 \" |~ ` route=/puzzle/\\{token\\}$` [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 66
+      },
+      "id": 31
+    },
+    {
+      "type": "stat",
+      "title": "공유 링크 앱 유입",
+      "description": "공유 링크를 통한 앱 진입 건수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \" - GET \" |= \"status=200 \" |~ ` route=/api/community/puzzle/share/\\{token\\}$` [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 66
+      },
+      "id": 32
+    },
+    {
+      "type": "row",
+      "title": "유저 분석 (선택 기간)",
+      "collapsed": false,
+      "panels": [],
+      "id": 33,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 70
+      }
+    },
+    {
+      "type": "table",
+      "title": "요청 상위 유저 Top 20",
+      "description": "API 호출 상위 유저. ID 클릭 시 유저 추적.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "topk(20, sum by (user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [user=<user>] <_>` [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "minWidth": 60
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "유저 ID"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "이 유저 추적하기",
+                    "url": "/d/renzzle-user-trace/user-trace?var-user=${__value.raw}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "요청 수"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "gauge",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-BlPu"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "Value #A",
+                "desc": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "user": "유저 ID",
+              "Value #A": "요청 수"
+            },
+            "indexByName": {}
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ]
+        }
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 71
+      },
+      "id": 34
+    },
+    {
+      "type": "table",
+      "title": "5xx 발생 유저 Top 20",
+      "description": "5xx 응답 상위 유저. ID 클릭 시 유저 추적.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "topk(20, sum by (user) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" != \"[user=]\" | pattern `<_> [<_>] [<_>] [user=<user>] <_> - <_> <_> status=<status> <_>ms<_>` | status >= 500 [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "minWidth": 60
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "유저 ID"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "이 유저 추적하기",
+                    "url": "/d/renzzle-user-trace/user-trace?var-user=${__value.raw}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "Value #A",
+                "desc": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "user": "유저 ID",
+              "Value #A": "5xx 횟수"
+            },
+            "indexByName": {}
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ]
+        }
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 71
+      },
+      "id": 35
+    }
+  ]
+}

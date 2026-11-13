@@ -1,0 +1,22 @@
+# Registered on every start. A data source of the same name that was added by hand before is taken over in place
+# and keeps its UID, so dashboards imported earlier stay connected.
+# No UID is pinned here for that reason: the dashboards in this repo pick their data source through a variable.
+
+apiVersion: 1
+
+datasources:
+  - name: prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      # Alloy scrapes the app every 15s; $__rate_interval needs to know it
+      timeInterval: 15s
+
+  - name: loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      maxLines: 1000

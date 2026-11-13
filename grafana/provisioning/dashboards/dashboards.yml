@@ -1,0 +1,25 @@
+# Dashboards are files in grafana/dashboards. Changes made in the Grafana UI are not saved back:
+# export the JSON (Share → Export) into this repo instead, or use "Save as" for a scratch copy.
+
+apiVersion: 1
+
+providers:
+  - name: service
+    folder: 서비스 분석
+    folderUid: renzzle-service
+    type: file
+    disableDeletion: true
+    allowUiUpdates: false
+    updateIntervalSeconds: 60
+    options:
+      path: /etc/grafana/dashboards/service
+
+  - name: server
+    folder: 서버 상태
+    folderUid: renzzle-server
+    type: file
+    disableDeletion: true
+    allowUiUpdates: false
+    updateIntervalSeconds: 60
+    options:
+      path: /etc/grafana/dashboards/server
