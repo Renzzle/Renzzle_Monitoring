@@ -532,7 +532,7 @@
             "uid": "${loki}"
           },
           "editorMode": "code",
-          "expr": "sum by (d, day) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \"[user=${user}]\" != \"[user=]\" | label_format d=`{{ date \"2006-01-02\" (add (unixEpoch __timestamp__) 32400) }}`, day=`{{ date \"01/02 Mon\" (add (unixEpoch __timestamp__) 32400) }}` [$__range]))",
+          "expr": "sum by (d, day) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \"[user=${user}]\" != \"[user=]\" | label_format d=`{{ date \"2006-01-02\" (add (unixEpoch __timestamp__) 32400) }}`, day=`{{ date \"01/02 Mon\" (add (unixEpoch __timestamp__) 32400) }}` [$__range])) or (sum by (d, day) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" | label_format d=`{{ date \"2006-01-02\" (add (unixEpoch __timestamp__) 32400) }}`, day=`{{ date \"01/02 Mon\" (add (unixEpoch __timestamp__) 32400) }}` [$__range])) * 0)",
           "queryType": "instant",
           "refId": "A"
         }

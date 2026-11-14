@@ -582,7 +582,7 @@
             "uid": "${loki}"
           },
           "editorMode": "code",
-          "expr": "sum by (d, day, product) (count_over_time({job=\"renzzle-backend\"} |= \"In-app purchase granted.\" | pattern `<_>platform=<platform>, productId=<product>, <_>` | label_format d=`{{ date \"2006-01-02\" (add (unixEpoch __timestamp__) 32400) }}`, day=`{{ date \"01/02 Mon\" (add (unixEpoch __timestamp__) 32400) }}` [$__range]))",
+          "expr": "sum by (d, day, product) (count_over_time({job=\"renzzle-backend\"} |= \"In-app purchase granted.\" | pattern `<_>platform=<platform>, productId=<product>, <_>` | label_format d=`{{ date \"2006-01-02\" (add (unixEpoch __timestamp__) 32400) }}`, day=`{{ date \"01/02 Mon\" (add (unixEpoch __timestamp__) 32400) }}` [$__range])) or (sum by (d, day, product) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" | label_format d=`{{ date \"2006-01-02\" (add (unixEpoch __timestamp__) 32400) }}`, day=`{{ date \"01/02 Mon\" (add (unixEpoch __timestamp__) 32400) }}`, product=\"_fill\" [$__range])) * 0)",
           "queryType": "instant",
           "legendFormat": "{{product}}",
           "refId": "A"
@@ -650,6 +650,9 @@
               "piece_5000": "piece 5,000",
               "piece_10000": "piece 10,000",
               "remove_ads": "광고 제거"
+            },
+            "excludeByName": {
+              "_fill": true
             }
           }
         }
