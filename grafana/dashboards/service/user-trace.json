@@ -927,11 +927,11 @@
                   "index": 2
                 },
                 "POST /api/auth/signup": {
-                  "text": "[인증] 회원가입",
+                  "text": "[인증] 이메일 회원가입",
                   "index": 3
                 },
                 "POST /api/auth/login": {
-                  "text": "[인증] 로그인",
+                  "text": "[인증] 이메일 로그인",
                   "index": 4
                 },
                 "POST /api/auth/password/verify": {
@@ -1035,7 +1035,7 @@
                   "index": 29
                 },
                 "POST /api/community/puzzle/{puzzleId}/answer": {
-                  "text": "[커뮤니티] 정답 보기 (재화)",
+                  "text": "[커뮤니티] 정답 보기 (첫 열람만 재화)",
                   "index": 30
                 },
                 "POST /api/community/puzzle/{puzzleId}/solve": {
@@ -1131,7 +1131,7 @@
                   "index": 53
                 },
                 "POST /api/training/puzzle/{puzzleId}/answer": {
-                  "text": "[트레이닝] 정답 구매 (재화)",
+                  "text": "[트레이닝] 정답 보기 (첫 열람만 재화)",
                   "index": 54
                 },
                 "GET /api/user": {
@@ -1161,6 +1161,30 @@
                 "DELETE /api/user/{puzzleId}": {
                   "text": "[내 정보] 내 퍼즐 삭제",
                   "index": 61
+                },
+                "POST /api/auth/oauth/login": {
+                  "text": "[인증] Google·Apple 로그인",
+                  "index": 62
+                },
+                "POST /api/auth/oauth/signup": {
+                  "text": "[인증] Google·Apple 회원가입",
+                  "index": 63
+                },
+                "GET /api/community/puzzle/{puzzleId}/hint": {
+                  "text": "[커뮤니티] 힌트 보기",
+                  "index": 64
+                },
+                "GET /api/training/puzzle/{puzzleId}/hint": {
+                  "text": "[트레이닝] 힌트 보기",
+                  "index": 65
+                },
+                "POST /api/user/oauth/{provider}": {
+                  "text": "[내 정보] Google·Apple 연결",
+                  "index": 66
+                },
+                "DELETE /api/user/oauth/{provider}": {
+                  "text": "[내 정보] Google·Apple 연결 해제",
+                  "index": 67
                 }
               }
             }

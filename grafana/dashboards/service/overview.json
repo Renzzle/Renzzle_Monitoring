@@ -423,7 +423,7 @@
     {
       "type": "stat",
       "title": "신규 가입 (선택 기간)",
-      "description": "회원가입 건수.",
+      "description": "이메일·Google·Apple 회원가입 건수.",
       "datasource": {
         "type": "loki",
         "uid": "${loki}"
@@ -435,7 +435,7 @@
             "uid": "${loki}"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \" - POST \" |= \"status=200 \" |~ ` route=/api/auth/signup$` [$__range]))",
+          "expr": "sum(count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \" - POST \" |= \"status=200 \" |~ ` route=/api/auth/(oauth/)?signup$` [$__range]))",
           "queryType": "instant",
           "refId": "A"
         }
@@ -870,7 +870,7 @@
     {
       "type": "barchart",
       "title": "일별 신규 가입 (최근 30일)",
-      "description": "일별 회원가입 건수.",
+      "description": "일별 회원가입 건수. 이메일 가입과 Google·Apple 가입을 나눠 쌓는다.",
       "datasource": {
         "type": "loki",
         "uid": "${loki}"
@@ -882,8 +882,9 @@
             "uid": "${loki}"
           },
           "editorMode": "code",
-          "expr": "sum by (d, day) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \" - POST \" |= \"status=200 \" |~ ` route=/api/auth/signup$` | label_format d=`{{ date \"2006-01-02\" (add (unixEpoch __timestamp__) 32400) }}`, day=`{{ date \"01/02 Mon\" (add (unixEpoch __timestamp__) 32400) }}` [$__range])) or (sum by (d, day) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" | label_format d=`{{ date \"2006-01-02\" (add (unixEpoch __timestamp__) 32400) }}`, day=`{{ date \"01/02 Mon\" (add (unixEpoch __timestamp__) 32400) }}` [$__range])) * 0)",
+          "expr": "sum by (d, day, method) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \" - POST \" |= \"status=200 \" |~ ` route=/api/auth/(oauth/)?signup$` | pattern `<_> route=<route>` | label_format method=`{{ if eq .route \"/api/auth/signup\" }}email{{ else }}oauth{{ end }}` | label_format d=`{{ date \"2006-01-02\" (add (unixEpoch __timestamp__) 32400) }}`, day=`{{ date \"01/02 Mon\" (add (unixEpoch __timestamp__) 32400) }}` [$__range])) or (sum by (d, day, method) (count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" | label_format d=`{{ date \"2006-01-02\" (add (unixEpoch __timestamp__) 32400) }}`, day=`{{ date \"01/02 Mon\" (add (unixEpoch __timestamp__) 32400) }}`, method=\"_fill\" [$__range])) * 0)",
           "queryType": "instant",
+          "legendFormat": "{{method}}",
           "refId": "A"
         }
       ],
@@ -901,8 +902,7 @@
           },
           "unit": "short",
           "color": {
-            "mode": "fixed",
-            "fixedColor": "green"
+            "mode": "palette-classic"
           },
           "custom": {
             "fillOpacity": 80,
@@ -917,7 +917,38 @@
             }
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "이메일"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "green"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Google·Apple"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "blue"
+                }
+              }
+            ]
+          }
+        ]
       },
       "timeFrom": "now-29d/d",
       "transformations": [
@@ -933,16 +964,25 @@
           }
         },
         {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "method",
+            "rowField": "day",
+            "valueField": "Value #A",
+            "emptyValue": "zero"
+          }
+        },
+        {
           "id": "organize",
           "options": {
-            "excludeByName": {
-              "Time": true,
-              "d": true
-            },
             "renameByName": {
-              "Value #A": "가입"
+              "day\\method": "날짜",
+              "email": "이메일",
+              "oauth": "Google·Apple"
             },
-            "indexByName": {}
+            "excludeByName": {
+              "_fill": true
+            }
           }
         }
       ],
@@ -951,7 +991,7 @@
         "xTickLabelRotation": -45,
         "xTickLabelSpacing": 0,
         "showValue": "never",
-        "stacking": "none",
+        "stacking": "normal",
         "groupWidth": 0.7,
         "barWidth": 0.85,
         "barRadius": 0,
@@ -1144,11 +1184,11 @@
                   "index": 2
                 },
                 "POST /api/auth/signup": {
-                  "text": "[인증] 회원가입",
+                  "text": "[인증] 이메일 회원가입",
                   "index": 3
                 },
                 "POST /api/auth/login": {
-                  "text": "[인증] 로그인",
+                  "text": "[인증] 이메일 로그인",
                   "index": 4
                 },
                 "POST /api/auth/password/verify": {
@@ -1252,7 +1292,7 @@
                   "index": 29
                 },
                 "POST /api/community/puzzle/{puzzleId}/answer": {
-                  "text": "[커뮤니티] 정답 보기 (재화)",
+                  "text": "[커뮤니티] 정답 보기 (첫 열람만 재화)",
                   "index": 30
                 },
                 "POST /api/community/puzzle/{puzzleId}/solve": {
@@ -1348,7 +1388,7 @@
                   "index": 53
                 },
                 "POST /api/training/puzzle/{puzzleId}/answer": {
-                  "text": "[트레이닝] 정답 구매 (재화)",
+                  "text": "[트레이닝] 정답 보기 (첫 열람만 재화)",
                   "index": 54
                 },
                 "GET /api/user": {
@@ -1378,6 +1418,30 @@
                 "DELETE /api/user/{puzzleId}": {
                   "text": "[내 정보] 내 퍼즐 삭제",
                   "index": 61
+                },
+                "POST /api/auth/oauth/login": {
+                  "text": "[인증] Google·Apple 로그인",
+                  "index": 62
+                },
+                "POST /api/auth/oauth/signup": {
+                  "text": "[인증] Google·Apple 회원가입",
+                  "index": 63
+                },
+                "GET /api/community/puzzle/{puzzleId}/hint": {
+                  "text": "[커뮤니티] 힌트 보기",
+                  "index": 64
+                },
+                "GET /api/training/puzzle/{puzzleId}/hint": {
+                  "text": "[트레이닝] 힌트 보기",
+                  "index": 65
+                },
+                "POST /api/user/oauth/{provider}": {
+                  "text": "[내 정보] Google·Apple 연결",
+                  "index": 66
+                },
+                "DELETE /api/user/oauth/{provider}": {
+                  "text": "[내 정보] Google·Apple 연결 해제",
+                  "index": 67
                 }
               }
             }
@@ -2527,7 +2591,7 @@
             "uid": "${loki}"
           },
           "editorMode": "code",
-          "expr": "quantile_over_time(0.5, {job=\"renzzle-backend\"} |= \"Rank result. puzzleType=\" |= \"solved=true\" | pattern `<_>puzzleType=<ptype>, <_>elapsedMs=<elapsed>` | unwrap elapsed [$__range]) by (ptype)",
+          "expr": "quantile_over_time(0.5, {job=\"renzzle-backend\"} |= \"Rank result. puzzleType=\" |= \"solved=true\" | pattern `<_>puzzleType=<ptype>, <_>` | regexp `elapsedMs=(?P<elapsed>[0-9]+)` | unwrap elapsed [$__range]) by (ptype)",
           "queryType": "instant",
           "legendFormat": "{{ptype}}",
           "refId": "A"
@@ -2837,7 +2901,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "[트레이닝] 정답 구매 (재화)"
+                "value": "[트레이닝] 정답 보기 (첫 열람만 재화)"
               }
             ]
           },
@@ -2849,7 +2913,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "[커뮤니티] 정답 보기 (재화)"
+                "value": "[커뮤니티] 정답 보기 (첫 열람만 재화)"
               }
             ]
           },
@@ -3079,7 +3143,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "[트레이닝] 정답 구매 (재화)"
+                "value": "[트레이닝] 정답 보기 (첫 열람만 재화)"
               }
             ]
           },
@@ -3091,7 +3155,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "[커뮤니티] 정답 보기 (재화)"
+                "value": "[커뮤니티] 정답 보기 (첫 열람만 재화)"
               }
             ]
           },
@@ -3189,7 +3253,7 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 6,
+        "w": 5,
         "x": 0,
         "y": 66
       },
@@ -3254,8 +3318,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 6,
-        "x": 6,
+        "w": 5,
+        "x": 5,
         "y": 66
       },
       "id": 30
@@ -3319,8 +3383,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 6,
-        "x": 12,
+        "w": 5,
+        "x": 10,
         "y": 66
       },
       "id": 31
@@ -3384,11 +3448,76 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 6,
-        "x": 18,
+        "w": 5,
+        "x": 15,
         "y": 66
       },
       "id": 32
+    },
+    {
+      "type": "stat",
+      "title": "첫 화면 조회 (웹)",
+      "description": "renzzle.com 첫 화면 조회 건수.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${loki}"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${loki}"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({job=\"renzzle-backend\"} |= \"RequestLoggingFilter - \" |= \" - GET \" |= \"status=200 \" |~ ` route=/$` [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none",
+          "decimals": 0,
+          "noValue": "0",
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 66
+      },
+      "id": 36
     },
     {
       "type": "row",

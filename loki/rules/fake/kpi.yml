@@ -18,7 +18,7 @@ groups:
       - record: kpi:signups:day
         expr: |
           sum by (d) (count_over_time(
-            {job="renzzle-backend"} |= "RequestLoggingFilter - " |= " - POST " |= "status=200 " |~ ` route=/api/auth/signup$`
+            {job="renzzle-backend"} |= "RequestLoggingFilter - " |= " - POST " |= "status=200 " |~ ` route=/api/auth/(oauth/)?signup$`
             | label_format d=`{{ date "2006-01-02" (add (unixEpoch __timestamp__) 32400) }}` [36h]))
       - record: kpi:withdrawals:day
         expr: |
